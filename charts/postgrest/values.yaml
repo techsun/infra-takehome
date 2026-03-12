@@ -1,6 +1,6 @@
 image:
   repository: postgrest/postgrest
-  tag: v14.2.0
+  tag: v14.6
   pullPolicy: IfNotPresent
 
 service:

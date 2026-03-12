@@ -3,4 +3,4 @@ name: postgrest
 description: PostgREST deployment for the infra-takehome assessment
 type: application
 version: 0.1.0
-appVersion: "14.2.0"
+appVersion: "14.6"
