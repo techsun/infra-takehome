@@ -10,10 +10,9 @@ terraform {
       source  = "cyrilgdn/postgresql"
       version = "~> 1.26"
     }
-    # Uncomment for Step 2:
-    # kubernetes = {
-    #   source  = "hashicorp/kubernetes"
-    #   version = "~> 2.0"
-    # }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+    }
   }
 }
