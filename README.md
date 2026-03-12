@@ -23,6 +23,8 @@ You will need the following:
 
 ## Starting point
 
+> **Quick start:** `scripts/run-all.sh` runs all four steps below in sequence. Run `scripts/05-teardown.sh` to destroy everything.
+
 ### 1. Provision the cluster and database
 
 Follow the instructions in [`tofu/README.md`](tofu/README.md). This runs in two steps due to a provider initialisation dependency on the k3d cluster existing before Kubernetes resources can be applied.
