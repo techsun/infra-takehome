@@ -13,7 +13,6 @@ variable "k3s_version" {
 variable "postgres_password" {
   description = "Password for the PostgreSQL instance"
   type        = string
-  default     = "postgres"
   sensitive   = true
 }
 
