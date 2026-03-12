@@ -59,3 +59,11 @@ resource "postgresql_database" "postgrest" {
   name       = "postgrest"
   depends_on = [docker_container.postgres]
 }
+
+resource "postgresql_role" "authenticator" {
+  name       = "authenticator"
+  login      = true
+  superuser  = true
+  password   = var.postgres_password
+  depends_on = [postgresql_database.postgrest]
+}
