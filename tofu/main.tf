@@ -55,9 +55,17 @@ provider "postgresql" {
   sslmode  = "disable"
 }
 
+resource "terraform_data" "wait_for_postgres" {
+  depends_on = [docker_container.postgres]
+
+  provisioner "local-exec" {
+    command = "until docker exec postgres-infra-takehome pg_isready -U postgres; do sleep 1; done"
+  }
+}
+
 resource "postgresql_database" "postgrest" {
   name       = "postgrest"
-  depends_on = [docker_container.postgres]
+  depends_on = [terraform_data.wait_for_postgres]
 }
 
 resource "postgresql_role" "authenticator" {
