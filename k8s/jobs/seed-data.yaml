@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-data
+  namespace: postgrest
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed
+          image: postgres:16-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              psql "$PGRST_DB_URI" <<'SQL'
+                CREATE TABLE IF NOT EXISTS products (
+                  id       SERIAL PRIMARY KEY,
+                  name     TEXT        NOT NULL,
+                  category TEXT        NOT NULL,
+                  price    NUMERIC(10,2) NOT NULL
+                );
+
+                INSERT INTO products (name, category, price) VALUES
+                  ('Wireless Headphones', 'Electronics', 79.99),
+                  ('Mechanical Keyboard', 'Electronics', 129.99),
+                  ('Standing Desk Mat',   'Office',      49.99),
+                  ('Coffee Mug',          'Kitchen',     14.99),
+                  ('Notebook',            'Stationery',   8.99)
+                ON CONFLICT DO NOTHING;
+              SQL
+          envFrom:
+            - secretRef:
+                name: postgrest-db-credentials

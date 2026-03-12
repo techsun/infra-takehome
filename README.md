@@ -23,8 +23,31 @@ You will need the following:
 
 ## Starting point
 
-Use terraform or opentofu to initialise a k3d cluster and postgres instance locally from the `tofu` directory.
-Install Argo CD into the k3d cluster by following the instructions in the `argocd` directory.
+### 1. Provision the cluster and database
+
+Follow the instructions in [`tofu/README.md`](tofu/README.md). This runs in two steps due to a provider initialisation dependency on the k3d cluster existing before Kubernetes resources can be applied.
+
+### 2. Install ArgoCD and deploy PostgREST
+
+Follow the instructions in [`argocd/README.md`](argocd/README.md). This installs ArgoCD into the cluster and applies the ArgoCD Application that deploys PostgREST from the local Helm chart at `charts/postgrest/`.
+
+### 3. Seed the database
+
+```bash
+kubectl apply -f k8s/jobs/seed-data.yaml
+kubectl wait --for=condition=complete job/seed-data -n postgrest --timeout=60s
+```
+
+### 4. Reload the PostgREST schema cache
+
+PostgREST caches the database schema at startup. After the seed job completes, restart the deployment to pick up the new table:
+
+```bash
+kubectl rollout restart deployment/postgrest -n postgrest
+kubectl rollout status deployment/postgrest -n postgrest
+```
+
+PostgREST is now accessible at **http://localhost:8080/products**.
 
 # Problem
 
@@ -52,4 +75,4 @@ Use a kubernetes job to inject some data into the postgres database
 
 ## Provide an expected screenshot
 
-Update this file, README.md, with a screenshot of what we should see when we visit the URL after following your instructions - this should show us the data you have injected.
+![PostgREST products endpoint](docs/screenshot.png)
