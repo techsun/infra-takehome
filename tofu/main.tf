@@ -74,4 +74,9 @@ resource "postgresql_role" "authenticator" {
   superuser  = true
   password   = var.postgres_password
   depends_on = [postgresql_database.postgrest]
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "docker exec postgres-infra-takehome psql -U postgres -d postgrest -c \"REASSIGN OWNED BY authenticator TO postgres; DROP OWNED BY authenticator;\""
+  }
 }
