@@ -1,0 +1,11 @@
+image:
+  repository: postgrest/postgrest
+  tag: v14.2.0
+  pullPolicy: IfNotPresent
+
+service:
+  port: 3000
+
+ingress:
+  className: traefik
+  host: localhost
