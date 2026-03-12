@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgrest
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/techsun/infra-takehome.git
+    targetRevision: HEAD
+    path: charts/postgrest
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgrest
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
